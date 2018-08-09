@@ -166,10 +166,12 @@ SELECT Salary AS SecondHighestSalary
     ORDER BY Salary DESC
     LIMIT 1 OFFSET 1
 ```
-燃鹅，出现了null的问题，挖坑明天填……
-solution: [IFNULL](https://www.w3schools.com/sql/sql_isnull.asp "IFNULL")
+燃鹅，出现了null的问题：当表格中并不存在第二高Salary的时候，上述解法会给出一个空表，而不是题目中要求的null值。
+这个问题的解决方案：[IFNULL](https://www.w3schools.com/sql/sql_isnull.asp "IFNULL")
+需要注意的是，IFNULL的第一个参数（expression）如果是一句SELECT的话，需要用括号括起来。
 ```sql
-SELECT IFNULL(MAX(Salary), null) AS SecondHighestSalary
-    FROM Employee
-    WHERE Salary NOT IN (SELECT MAX(Salary) FROM Employee)
+SELECT IFNULL((SELECT DISTINCT Salary FROM Employee
+                ORDER BY Salary DESC
+                LIMIT 1 OFFSET 1), NULL) AS SecondHighestSalary
 ```
+另一个需要注意的点：DISTINCT。
