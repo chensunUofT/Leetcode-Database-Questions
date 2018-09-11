@@ -6,4 +6,4 @@ Sharing my solutions and explaination of [Leetcode database questions](https://l
 All Easy questions done.
 
 ### Sept. 11th
-All Medium questions done.
+All Medium questions done. Start working on hard ones.
