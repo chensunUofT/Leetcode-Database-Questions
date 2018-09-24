@@ -52,3 +52,16 @@ SELECT D.Name AS Department, E1.Name AS Employee, E1.Salary AS Salary
 代码逻辑倒是不复杂，没有想到这个思路可能是因为不熟悉query中的数据可以拿到sub-query中使用的这个思路。另外一个巨坑：
 **SQL真的完全 cAsE-INsenSaTiVe !!!** 
 我是怎么想到通过大小写区分不同表格的。。。
+
+### [262. Trips and Users](https://leetcode.com/problems/trips-and-users/description/)
+cancellation rate的计算：两项做除法，分母是按日期GROUPBY且满足条件的`COUNT(*)`；分子是被取消的订单数，实现方法：通过`CASE`判断是否被取消并赋值为0或1，通过`SUM`求和。
+其他要注意的点：
+- `ROUND`保留有效数字
+- 用双引号`"Cancellation rate"`包裹住带空格的alias。据说用中括号也是可以的，但没成功
+```sql
+SELECT DISTINCT T.Request_at AS Day, (ROUND(SUM(CASE WHEN T.Status IN ('cancelled_by_client', 'cancelled_by_driver') THEN 1 ElSE 0 END) / COUNT(*),2)) AS "Cancellation Rate"
+    FROM Trips T INNER JOIN Users U ON T.Client_Id = U.Users_Id
+    WHERE U.Banned='No'
+        AND T.Request_at IN ('2013-10-01', '2013-10-02', '2013-10-03')
+    GROUP BY T.Request_at
+```
